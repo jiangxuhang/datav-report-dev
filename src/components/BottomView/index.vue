@@ -46,7 +46,9 @@
           </div>
         </template>
         <template>
-          <v-chart :option="categoryOption"></v-chart>
+          <div class="chart-wrapper">
+            <v-chart :options="categoryOption"></v-chart>
+          </div>
         </template>
       </el-card>
     </div>
@@ -123,7 +125,111 @@ export default {
   methods: {
     onPageChange(page) {
       console.log(page)
+    },
+    renderPieChart() {
+      const mockData = [
+        {
+          legendname: '粉面粥店',
+          value: 67,
+          percent: '15.40%',
+          itemStyle: {
+            color: '#e7e702'
+          },
+          name: '粉面粥店 | 15.40%'
+        },
+        {
+          legendname: '简餐便当',
+          value: 97,
+          percent: '22.30%',
+          itemStyle: {
+            color: '#8d7fec'
+          },
+          name: '简餐便当 | 22.30%'
+        },
+        {
+          legendname: '汉堡披萨',
+          value: 92,
+          percent: '21.15%',
+          itemStyle: {
+            color: '#5085f2'
+          },
+          name: '汉堡披萨 | 21.15%'
+        }
+      ]
+      this.categoryOption = {
+        title: [{
+          text: '品类分布',
+          textStyle: {
+            color: '#666',
+            fontSize: 14
+          },
+          left: 20,
+          top: 20
+        }, {
+          text: '累计订单量',
+          subtext: '320',
+          textStyle: {
+            color: '#999',
+            fontSize: 14
+          },
+          subtextStyle: {
+            color: '#333',
+            fontSize: 28
+          },
+          x: '34.5%',
+          y: '42.5%',
+          textAlign: 'center'
+        }],
+        series: [{
+          type: 'pie',
+          name: '品类分布',
+          data: mockData,
+          itemStyle: {
+            borderWidth: 4,
+            borderColor: '#fff'
+          },
+          label: {
+            normal: {
+              show: true,
+              position: 'outter',
+              formatter: (params) => {
+                return params.data.legendname
+              }
+            }
+          },
+          center: ['35%', '50%'],
+          radius: ['45%', '60%'],
+          labelLine: {
+            normal: {
+              length: 5,
+              length2: 3,
+              smooth: true
+            }
+          },
+          clockwise: true
+        }],
+        legend: {
+          type: 'scroll',
+          orient: 'vertical',
+          height: 250,
+          left: '70%',
+          top: 'middle',
+          textStyle: {
+            color: '#8c8c8c'
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: (params) => {
+            const str = params.seriesName + '<br />' + params.marker + params.data.legendname + '<br />' + '数量:' + params.data.value + '<br />' + '占比:' + params.data.percent
+            return str
+          }
+        }
+      }
     }
+  },
+  mounted() {
+    this.renderPieChart()
   }
 }
 </script>
